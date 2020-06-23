@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import it.polito.tdp.artsmia.model.Adiacenza;
+import it.polito.tdp.artsmia.model.Artist;
 import it.polito.tdp.artsmia.model.Model;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -53,7 +54,23 @@ public class ArtsmiaController {
     @FXML
     void doCalcolaPercorso(ActionEvent event) {
     	txtResult.clear();
-    	txtResult.appendText("Calcola percorso");
+    	Integer id ;
+    	try {
+    		id = Integer.parseInt(this.txtArtista.getText());
+    	}catch(NumberFormatException e) {
+    		txtResult.appendText("Inserisci un numero");
+    	     return;
+    	}
+    	Artist artista = this.model.getArtista(id);
+    	if(artista == null) {
+    		txtResult.appendText("Artista non presente nel Grafo!");
+    		return;
+    	}
+    	List<Artist> percorso = this.model.trovaPercorso(id);
+    	txtResult.appendText("TROVATO PERCORSO DI LUNGHEZZA: "+percorso.size()+"\n");
+    	for(Artist a: percorso) {
+    		txtResult.appendText(a.toString()+"\n");
+    	}
     }
 
     @FXML

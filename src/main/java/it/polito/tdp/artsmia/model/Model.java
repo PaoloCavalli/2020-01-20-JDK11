@@ -59,19 +59,52 @@ public class Model {
 		  Collections.sort(adiacenze);	
 	      return adiacenze;
 		}
-//PUNTO 2
-		/*public List<Artist> trovaPercorso(Integer id){
+		public Artist getArtista(Integer id) {
 			Artist sorgente = null;
 			for(Artist a: this.grafo.vertexSet()) {
-				if(a.getId() == id) {
+				if(a.getId().equals(id)) {
+					sorgente = a;
+				}
+			}
+			return sorgente;
+		}
+//PUNTO 2
+		public List<Artist> trovaPercorso(Integer id){
+			Artist sorgente = null;
+			for(Artist a: this.grafo.vertexSet()) {
+				if(a.getId().equals(id)) {
 					sorgente = a;
 				}
 			}
 			List<Artist> parziale = new ArrayList<>();
 			this.ottima = new ArrayList<Artist>();
 			parziale.add(sorgente);
-			//ricorsiva (parziale,)
+			ricorsiva (parziale, -1);
 			
+			return ottima;
 			
-		}*/
+		}
+
+private void ricorsiva(List<Artist> parziale, int peso) {
+	if(parziale.size()>ottima.size()) {
+		this.ottima= new ArrayList<>(parziale);
+	}
+	Artist ultimo = parziale.get(parziale.size()-1);
+	List<Artist> vicini = Graphs.neighborListOf(this.grafo, ultimo);
+	for(Artist vicino : vicini) {
+		if(!parziale.contains(vicino) && peso == -1) {
+			parziale.add(vicino);
+			ricorsiva(parziale,(int) this.grafo.getEdgeWeight(this.grafo.getEdge(ultimo, vicino)));
+			parziale.remove(vicino);
+			
+		}else {
+			if(!parziale.contains(vicino) && this.grafo.getEdgeWeight(this.grafo.getEdge(ultimo, vicino)) == peso) {
+				parziale.add(vicino);
+				ricorsiva(parziale, peso);
+				parziale.remove(vicino);
+			}
+		}
+	}
+	
+}
 }
